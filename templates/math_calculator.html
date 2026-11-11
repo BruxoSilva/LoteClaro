@@ -1,0 +1,11 @@
+<section class="panel math-panel" aria-labelledby="math-title">
+<div class="panel-title"><h2 id="math-title">Calculadora simples</h2><button id="math-history-toggle" type="button" class="secondary" aria-label="Abrir histórico de cálculos" aria-expanded="false" aria-controls="math-history"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6H7"/></svg><span>Histórico</span></button></div>
+<div class="math-layout"><div class="math-controls">
+<label for="math-expression">Expressão</label><input id="math-expression" type="text" inputmode="decimal" maxlength="2048" autocomplete="off" spellcheck="false" aria-describedby="math-help math-error" placeholder="0">
+<span class="hint">Resultado</span><output id="math-result" for="math-expression" aria-live="polite">0</output><p id="math-error" role="alert"></p>
+<div class="math-keys" aria-label="Teclado da calculadora">
+{% for value,label,aria in [('back','⌫','Apagar último caractere'),('clear','AC','Limpar tudo'),('%','%','Porcentagem'),('/','÷','Dividir'),('7','7','7'),('8','8','8'),('9','9','9'),('*','×','Multiplicar'),('4','4','4'),('5','5','5'),('6','6','6'),('-','−','Subtrair'),('1','1','1'),('2','2','2'),('3','3','3'),('+','+','Somar'),('sign','+/−','Inverter sinal'),('0','0','0'),(',',',','Separador decimal'),('equals','=','Calcular resultado'),('(','(','Abrir parênteses'),(')',')','Fechar parênteses')] %}
+<button type="button" data-math="{{ value }}" aria-label="{{ aria }}" class="{{ 'math-operator' if value in ['+','-','*','/','equals'] else 'secondary' }}">{{ label }}</button>{% endfor %}
+</div><p id="math-help" class="hint">Enter: calcular · Escape: limpar · Backspace: apagar. Até 16 algarismos significativos; números extremos usam notação científica. Histórico salvo neste navegador, separado dos lotes.</p></div>
+<aside id="math-history" class="math-history" hidden aria-labelledby="math-history-title"><div class="panel-title"><h2 id="math-history-title">Histórico de cálculos</h2><button id="math-history-clear" type="button" class="secondary">Apagar histórico</button></div><p id="math-history-empty" class="muted">Nenhum cálculo no histórico.</p><ol id="math-history-list"></ol></aside></div>
+</section>

@@ -1,0 +1,6 @@
+{% macro token() %}<input type="hidden" name="csrf" value="{{ csrf }}">{% endmacro %}
+{% macro field(name,label,value='',mode='text',optional=false,maxlength=160) %}
+{% set shown = value|string %}{% if mode=='date' and '/' in shown %}{% set pieces=shown.split('/') %}{% set shown=pieces[2] ~ '-' ~ pieces[1] ~ '-' ~ pieces[0] %}{% endif %}
+<div class="field"><label for="{{ name }}">{{ label }}{% if optional %} <span class="muted">(opcional)</span>{% else %} *{% endif %}</label><input id="{{ name }}" name="{{ name }}" value="{{ shown }}" {% if not optional %}required{% endif %} maxlength="{{ maxlength }}" {% if mode=='decimal' %}inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"{% elif mode=='date' %}type="date" min="0001-01-01" max="9999-12-31"{% elif mode=='integer' %}inputmode="numeric" pattern="[0-9]+"{% endif %}></div>
+{% endmacro %}
+{% macro confirm_edit() %}<label class="check"><input type="checkbox" name="confirm" value="sim" required> Confirmo a alteração deste registro e o recálculo dos resultados.</label>{% endmacro %}

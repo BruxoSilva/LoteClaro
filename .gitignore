@@ -1,0 +1,42 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Configuracoes locais e segredos
+.env
+.env.*
+!.env.example
+Programa/lote-claro.json
+
+# Dados reais e arquivos gerados
+data/*
+!data/.gitkeep
+backups/*
+!backups/.gitkeep
+Relatorios/*
+!Relatorios/.gitkeep
+logs/*
+!logs/.gitkeep
+perfil-aplicativo/
+tmp/
+
+# Binarios e artefatos de compilacao
+Programa/LoteClaro.exe
+build/
+dist/
+*.spec.bak
+
+# Referencias locais que podem conter dados pessoais
+Exemplo PDF/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/

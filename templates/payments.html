@@ -1,0 +1,19 @@
+{% from 'macros.html' import token,field with context %}
+<section class="panel"><div class="panel-title"><h2>Compra e pagamentos ao fornecedor</h2><button type="button" id="payment-open">Gerar relatório de pagamento</button></div>
+<p>Valor líquido: <strong>{{ money(buy.net) }}</strong> · Total pago: <strong>{{ money(buy.previous_total) }}</strong> · {{ payment_state(buy.balance) }}: <strong>{{ money(buy.balance|abs) }}</strong></p>
+<div class="table-scroll"><table><thead><tr><th>Data do pagamento</th><th>Dinheiro</th><th>Cheques</th><th>Total</th><th>Saldo posterior</th><th>Situação</th><th>Relatório</th></tr></thead><tbody>
+{% for p in payments %}<tr><td>{{ brdate(p.created_at) }}</td><td>{{ money(p.cash_cents) }}</td><td>{{ money(p.checks_cents) }}</td><td>{{ money(p.total_cents) }}</td><td>{{ money(p.balance_cents|abs) }}</td><td>{{ payment_state(p.balance_cents) }}</td><td>{% if p.pdf_name %}<a href="{{ url_for('download_payment',payment_id=p.id) }}">{{ 'Baixar imagem' if p.pdf_name.endswith('.png') else 'PDF anterior' }}</a>{% endif %}<form method="post" action="{{ url_for('regenerate_payment',payment_id=p.id) }}">{{ token() }}<button type="submit" class="secondary">Gerar imagem</button></form></td></tr>{% else %}<tr><td colspan="7">Nenhum pagamento confirmado.</td></tr>{% endfor %}</tbody></table></div></section>
+<dialog id="payment-dialog" aria-labelledby="payment-title"><h2 id="payment-title">Compra e pagamento · Lote {{ '%04d'|format(lot.id) }}</h2>
+<p>{{ lot.farm }} · Retirada {{ brdate(lot.withdrawal) }} · {{ lot.heads }} cabeças</p>
+<div class="table-scroll"><table><tbody>
+{% for label,value in [('Peso original antes das perdas',kg(buy.original_g)),('Valor de compra por kg',money(buy.price_cents)),('Valor bruto',money(buy.gross)),('Peso total das perdas',kg(buy.loss_g)),('Descontos',money(buy.discount)),('Peso líquido para pagamento',kg(buy.net_g)),('Valor líquido',money(buy.net)),('Total pago anteriormente',money(buy.previous_total)),('Saldo atual / haver',money(buy.balance))] %}<tr><th>{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
+</tbody></table></div><h3>Perdas registradas</h3><div class="table-scroll"><table><thead><tr><th>Data</th><th>Descrição</th><th>Peso</th><th>Desconto</th></tr></thead><tbody>{% for p in buy.losses %}<tr><td>{{ brdate(p.date) }}</td><td>{{ p.description }}</td><td>{{ kg(p.weight_g) }}</td><td>{{ money(p.discount) }}</td></tr>{% else %}<tr><td colspan="4">Nenhuma perda registrada.</td></tr>{% endfor %}</tbody></table></div>
+<form id="payment-form" action="{{ url_for('save_payment',lot_id=lot.id) }}" method="post" data-balance="{{ buy.balance }}">{{ token() }}<input type="hidden" name="payment_key" value="{{ payment_key }}">
+{{ field('cash','Valor em dinheiro (R$)','0,00','decimal') }}
+<h3>Cheques</h3><div id="payment-checks"></div><button type="button" id="payment-add-check" class="secondary">Adicionar cheque</button>
+{{ field('payment_note','Observações','',optional=true,maxlength=2000) }}
+<div class="notice" aria-live="polite"><p>Total desta operação: <strong id="payment-total">R$ 0,00</strong></p><p><span id="payment-balance-label">Saldo final</span>: <strong id="payment-balance">{{ money(buy.balance) }}</strong></p></div>
+<label id="payment-credit" class="check" hidden><input type="checkbox" name="confirm_credit" value="sim"> Confirmo o excedente exibido como crédito/haver junto ao fornecedor.</label>
+<label class="check"><input type="checkbox" name="confirm" value="sim" required> Conferi os dados e confirmo este pagamento.</label><div class="actions"><button type="button" id="payment-cancel" class="secondary" autofocus>Cancelar</button><button type="submit">Confirmar e gerar imagem</button></div>
+</form></dialog>
+<script src="{{ url_for('static',filename='payments.js') }}" defer></script>

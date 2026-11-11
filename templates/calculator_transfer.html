@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block content %}
+<div class="heading"><div><p class="eyebrow">SEUS RASCUNHOS</p><h1>Transferir calculadora</h1><p class="muted">Leve o histórico e as anotações deste navegador para o aplicativo.</p></div></div>
+<div id="transfer-status" role="status" aria-live="polite"></div>
+<section class="panel form-panel"><h2>1. Neste navegador</h2><p>Abra esta tela no mesmo endereço em que você usava a calculadora. Exporte os dados desta aba; nada será apagado.</p><button type="button" id="transfer-export">Exportar histórico e rascunho</button></section>
+<section class="panel form-panel"><h2>2. No aplicativo</h2><p>Selecione o arquivo exportado. Os dados serão acrescentados aos que já existem. Lotes e pagamentos não são alterados.</p><label for="transfer-file">Arquivo de transferência (.json)</label><input id="transfer-file" type="file" accept=".json,application/json"><button type="button" id="transfer-import">Importar sem apagar dados atuais</button></section>
+<a class="button secondary" href="/calculadora">Voltar à calculadora</a>
+<script src="{{ url_for('static',filename='calculator-transfer.js') }}" defer></script>
+{% endblock %}

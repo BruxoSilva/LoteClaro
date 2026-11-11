@@ -1,0 +1,15 @@
+LOTE CLARO - APLICATIVO PARA WINDOWS
+
+1. Dê dois cliques em LoteClaro.exe.
+2. O programa abrirá em uma janela própria.
+3. Os dados usados são os mesmos de D:\Site calculadora\data\calculadora.db.
+
+Mantenha LoteClaro.exe e lote-claro.json juntos.
+Não mova ou apague as pastas data, Relatorios e backups.
+
+Para levar o histórico da calculadora do navegador antigo:
+- Abra Calculadora > Transferir histórico e rascunho no navegador antigo.
+- Exporte o arquivo JSON.
+- Abra a mesma tela no aplicativo e importe o arquivo.
+
+O acesso remoto pelo telefone será configurado na etapa final.

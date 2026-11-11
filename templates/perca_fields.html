@@ -1,0 +1,7 @@
+{% from 'macros.html' import field with context %}
+<fieldset><legend>PERCAS — desconto no peso pago (opcional)</legend>
+<p class="hint">Informe o peso perdido e o que foi perdido. O peso pago líquido e os resultados financeiros serão recalculados.</p>
+{{ field('perca_weight','Peso da PERCA (kg)','','decimal',optional=true) }}
+{{ field('perca_note','O que foi perdido?','',optional=true,maxlength=500) }}
+<p class="hint">Ao informar um dos campos, preencha ambos. Este lançamento pertence ao lote; edite ou exclua pela seção PERCAS. Não o lance novamente ao editar a venda.</p>
+</fieldset>

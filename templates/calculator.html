@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% from 'macros.html' import field with context %}{% block content %}
+<div class="heading"><div><p class="eyebrow">ESPAÇO INDEPENDENTE</p><h1>Calculadora</h1><p class="muted">Recebimentos de exemplo, contas e anotações em um só rascunho.</p></div><span class="badge">RASCUNHO · SEM EFEITO NOS LOTES</span></div>
+<div class="notice">Estes valores não entram nas vendas, no estoque ou nos resultados do sistema. O relatório aparece somente nesta tela, sem gerar arquivos. O rascunho fica nesta aba do navegador durante a sessão; não faz parte do backup do banco.</div>
+<noscript><p class="notice negative">Ative o JavaScript para usar a calculadora independente.</p></noscript>
+<p><a href="/transferir-calculadora">Transferir histórico e rascunho para outro navegador ou para o aplicativo</a></p>
+<div id="draft-status" role="status" aria-live="polite"></div>
+{% include 'math_calculator.html' %}
+<div class="draft-layout">
+<form id="draft-form" data-local-form method="get" action="/calculadora" class="panel form-panel">
+<h2 id="draft-form-title">Adicionar recebimento</h2><p class="hint">* Campos obrigatórios. Use valores como 1234,56, sem separador de milhares.</p>
+{{ field('draft-amount','Valor recebido (R$)','','decimal',maxlength=20) }}
+{{ field('draft-client','Nome do cliente') }}
+{{ field('draft-date','Data da venda',today,'date') }}
+<div class="field"><label for="draft-method">Forma de recebimento *</label><select id="draft-method" name="draft-method" required><option value="">Selecione</option><option value="cheque">Cheque</option><option value="dinheiro">Dinheiro</option></select></div>
+<div class="actions"><button id="draft-save" type="submit">Adicionar ao rascunho</button><button id="draft-cancel" type="button" class="secondary" hidden>Cancelar edição</button></div>
+</form>
+<section class="panel"><h2>Anotações</h2><label for="draft-notes">Observações do rascunho (opcional)</label><textarea id="draft-notes" rows="2" maxlength="5000" placeholder="Anote aqui suas conferências e exemplos..."></textarea><p class="hint">As anotações também aparecem no resumo. Até 5.000 caracteres.</p></section>
+</div>
+<section class="panel"><div class="panel-title"><h2>Recebimentos adicionados <span id="draft-count" class="badge">0</span></h2><button id="draft-clear" type="button" class="secondary">Limpar rascunho</button></div>
+<p id="draft-empty" class="muted">Adicione um ou mais recebimentos para calcular.</p><div class="table-scroll"><table id="draft-table" hidden><thead><tr><th>Data da venda</th><th>Cliente</th><th>Forma</th><th>Valor recebido</th><th>Ações</th></tr></thead><tbody id="draft-rows"></tbody></table></div>
+<div class="actions"><button id="draft-generate" type="button">Gerar relatório de cálculo na tela</button></div><p class="hint">Editar ou adicionar um recebimento exige gerar o resumo novamente.</p></section>
+<section id="draft-report" class="panel" hidden tabindex="-1" aria-labelledby="draft-report-title"><p class="eyebrow">RESUMO DO RASCUNHO</p><h2 id="draft-report-title">Relatório de cálculo</h2>
+<p id="draft-report-count" class="muted"></p><div class="summary"><article><span>Total em cheques</span><strong id="draft-cheque"></strong></article><article><span>Total em dinheiro</span><strong id="draft-cash"></strong></article><article><span>Total recebido</span><strong id="draft-total" class="positive"></strong></article></div>
+<p id="draft-equation"></p><h2>Detalhamento dos recebimentos</h2><div class="table-scroll"><table><thead><tr><th>Data da venda</th><th>Cliente</th><th>Forma</th><th>Valor recebido</th></tr></thead><tbody id="draft-report-rows"></tbody></table></div>
+<h2 class="draft-subheading">Totais por cliente</h2><div class="table-scroll"><table><thead><tr><th>Cliente</th><th>Cheque</th><th>Dinheiro</th><th>Total</th></tr></thead><tbody id="draft-clients"></tbody></table></div>
+<h2 class="draft-subheading">Anotações</h2><p id="draft-report-notes" class="draft-prewrap"></p><p class="hint">Rascunho independente. Nenhum valor deste relatório foi lançado no sistema.</p></section>
+<script src="{{ url_for('static',filename='calculator.js') }}" defer></script>
+<script src="{{ url_for('static',filename='math-engine.js') }}" defer></script>
+<script src="{{ url_for('static',filename='math-calculator.js') }}" defer></script>
+{% endblock %}

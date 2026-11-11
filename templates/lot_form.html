@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% from 'macros.html' import token,field,confirm_edit with context %}{% block content %}
+<div class="heading"><div><p class="eyebrow">CADASTRO</p><h1>{{ 'Editar lote #' ~ '%04d'|format(lot.id) if lot else 'Novo lote' }}</h1><p class="muted">Entrada e peso pago são informações independentes.</p></div></div>
+<form method="post" action="{{ request.path }}" class="panel form-panel">{{ token() }}<p class="hint">* Campos obrigatórios. Use vírgula decimal, sem separador de milhares. Pesos: até 3 casas; reais: até 2 casas.</p>
+{{ field('farm','Nome da granja',lot.farm if lot else '') }}
+{{ field('withdrawal','Data de retirada',brdate(lot.withdrawal) if lot else today,'date') }}
+{{ field('heads','Quantidade de cabeças',lot.heads if lot else '','integer') }}
+{{ field('entry','Quantidade de entrada (kg)',decimal_input(lot.entry_g,1000) if lot else '','decimal') }}
+{{ field('paid','Peso pago original, antes das PERCAS (kg)',decimal_input(lot.paid_g,1000) if lot else '','decimal') }}
+{{ field('cost','Valor de custo pago por kg (R$)',decimal_input(lot.cost_cents,100) if lot else '','decimal') }}
+{% if not lot %}{% include 'perca_fields.html' %}{% else %}<p class="notice">As PERCAS existentes são descontadas automaticamente do peso pago original. Gerencie os lançamentos na seção PERCAS do lote.</p>{% endif %}
+<p class="notice">As despesas serão adicionadas em lançamentos próprios após salvar o lote.</p>{% if lot %}{{ confirm_edit() }}{% endif %}<div class="actions"><button type="submit">Salvar lote</button><a class="button secondary" href="{{ url_for('lot_detail',lot_id=lot.id) if lot else '/lotes' }}">Cancelar</a></div></form>{% endblock %}

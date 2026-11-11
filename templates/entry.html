@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% from 'macros.html' import token,field,confirm_edit with context %}{% block content %}
+<div class="heading"><div><p class="eyebrow">LOTE #{{ '%04d'|format(lot.id) }} · {{ lot.farm }}</p><h1>{{ 'Editar' if item else 'Lançar' }} {{ 'venda' if kind=='vendas' else 'PERCA' if kind=='percas' else 'despesa' }}</h1></div></div>
+<form method="post" action="{{ request.path }}" class="panel form-panel" {% if kind=='vendas' %}id="sale-form"{% endif %}>{{ token() }}<p class="hint">* Campos obrigatórios. Números sem separador de milhares; use vírgula decimal.</p>
+{{ field('date','Data',brdate(item.date) if item else today,'date') }}
+{% if kind=='vendas' %}
+<fieldset><legend>Cliente: escolha um cadastrado ou informe um novo nome</legend><div class="field"><label for="client_id">Cliente cadastrado</label><select id="client_id" name="client_id"><option value="">Selecione um cliente</option>{% for client in clients %}<option value="{{ client.id }}" {% if item and item.client_id==client.id %}selected{% endif %}>{{ client.name }} (#{{ client.id }})</option>{% endfor %}</select></div>
+{{ field('new_client','Cadastrar novo cliente agora','',optional=true) }}<p class="hint">Se preencher o novo nome, a venda será vinculada a esse novo cadastro.</p></fieldset>
+{{ field('weight','Peso vendido (kg)',decimal_input(item.weight_g,1000) if item else '','decimal') }}
+{{ field('price','Valor de venda por kg (R$)',decimal_input(item.price_cents,100) if item else '','decimal') }}
+<div class="sale-total">Total calculado <output id="sale-total" for="weight price" aria-live="polite">R$ 0,00</output></div>
+{{ field('note','Observação',item.note if item else '',optional=true,maxlength=500) }}
+{% if not item %}{% include 'perca_fields.html' %}{% else %}<p class="hint">As PERCAS são lançamentos independentes do lote. Gerencie-as na seção PERCAS; editar ou excluir a venda não altera as percas registradas.</p>{% endif %}
+{% elif kind=='percas' %}
+<p class="notice">O peso informado será descontado do peso pago original do lote, recalculando custo, lucro e margem. A entrada e o peso vendido continuam separados.</p>
+{{ field('weight','Peso da PERCA (kg)',decimal_input(item.weight_g,1000) if item else '','decimal') }}
+{{ field('note','O que foi perdido?',item.note if item else '',maxlength=500) }}
+{% else %}{{ field('description','Descrição',item.description if item else '',maxlength=300) }}{{ field('value','Valor (R$)',decimal_input(item.value_cents,100) if item else '','decimal') }}{% endif %}
+{% if item %}{{ confirm_edit() }}{% endif %}<div class="actions"><button type="submit">Salvar lançamento</button><a class="button secondary" href="{{ url_for('lot_detail',lot_id=lot.id) }}">Cancelar</a></div></form>{% endblock %}

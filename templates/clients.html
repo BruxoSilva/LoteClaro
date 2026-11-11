@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% from 'macros.html' import token,field with context %}{% block content %}
+<div class="heading"><div><p class="eyebrow">CADASTRO</p><h1>Clientes</h1><p class="muted">Apenas o nome. Você também pode cadastrar durante uma venda.</p></div></div>
+<form method="post" action="/clientes" class="panel form-panel">{{ token() }}{{ field('name','Nome do cliente') }}<button type="submit">Cadastrar cliente</button></form>
+<section class="panel"><h2>Clientes cadastrados</h2>{% if rows %}<div class="table-scroll"><table><thead><tr><th>Código</th><th>Nome</th></tr></thead><tbody>{% for row in rows %}<tr><td>#{{ row.id }}</td><td>{{ row.name }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="muted">Nenhum cliente cadastrado.</p>{% endif %}</section>{% endblock %}
